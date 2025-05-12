@@ -1,11 +1,15 @@
 'use client';
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { LoginForm } from "./components/LoginForm";
 
 const LoginPage = () => {
-  const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
+  const searchParams = useSearchParams();
+  const [activeTab, setActiveTab] = useState<'login' | 'register'>(
+    searchParams.get('tab') === 'register' ? 'register' : 'login'
+  );
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
