@@ -1,0 +1,18 @@
+.rct-calendar-header {
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ccc;
+}
+
+.rct-item {
+  background-color: #3b82f6;
+  color: white;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.rct-sidebar .rct-sidebar-row {
+  padding: 8px;
+  font-weight: bold;
+  background: #e2e8f0;
+  border-bottom: 1px solid #cbd5e1;
+}
