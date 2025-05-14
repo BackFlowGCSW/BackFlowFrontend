@@ -16,3 +16,21 @@
   background: #e2e8f0;
   border-bottom: 1px solid #cbd5e1;
 }
+/* timeline.css */
+.react-calendar-timeline {
+  overflow-x: hidden; /* Oculta el desbordamiento horizontal */
+  overflow-y: auto;   /* Permite desplazarse verticalmente si es necesario */
+}
+
+.react-calendar-timeline .rct-group {
+  border-bottom: 1px solid #d1d5db; /* Línea horizontal entre grupos */
+}
+
+.react-calendar-timeline .rct-day {
+  border-right: 1px solid #f3f3f3; /* Líneas verticales */
+}
+
+.react-calendar-timeline .rct-item {
+  border: 1px solid #ccc; /* Borde claro */
+  background-color: #f9fafb !important;
+}
