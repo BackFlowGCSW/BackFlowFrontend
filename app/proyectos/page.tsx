@@ -1,6 +1,13 @@
 // app/proyectos/page.tsx
 'use client';
 
+interface ProyectoPageProps {
+  params: {
+    orgId: string;
+  };
+}
+
+
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -61,7 +68,9 @@ export default function ProyectosPage() {
 
   // Crea proyecto llamando al API
   const handleCrearProyecto = async () => {
-    if (!organizacionId) {
+    // Obtener el id actual cada vez que se ejecuta la función
+    const currentOrgId = searchParams.get('org') || '';
+    if (!currentOrgId) {
       alert('Falta el ID de la organización');
       return;
     }
@@ -73,7 +82,7 @@ export default function ProyectosPage() {
         fecha_inicio: nuevoProyecto.fechaInicio || undefined,
         fecha_fin: nuevoProyecto.fechaTermino || undefined,
         metodologia: nuevoProyecto.metodologia,
-        organizacion_id: organizacionId
+        organizacion_id: currentOrgId  // Usar el id actual
       };
       const res = await fetch('http://localhost:8000/proyectos/', {
         method: 'POST',
@@ -95,14 +104,14 @@ export default function ProyectosPage() {
     } catch (err: any) {
       alert('Error al crear proyecto: ' + err.message);
     }
-  };
+};
 
   // API: lista proyectos
   const fetchProyectos = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:8000/proyectos/', {
-        headers: organizacionId ? { 'Content-Type': 'application/json' } : undefined
+      const res = await fetch(`http://localhost:8000/proyectos/?org=${organizacionId}`, {
+        headers: { 'Content-Type': 'application/json' }
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data: Proyecto[] = await res.json();
