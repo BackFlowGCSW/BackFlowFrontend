@@ -30,7 +30,7 @@ export default function LoginPage() {
       }
 
       try {
-        const res = await fetch('http://localhost:8000/usuarios/registro', {
+        const res = await fetch('http://161.132.45.35:8003/usuarios/registro', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ nombre, correo, password }),
@@ -55,7 +55,7 @@ export default function LoginPage() {
         form.append('username', correo);
         form.append('password', password);
 
-        const res = await fetch('http://localhost:8000/usuarios/login', {
+        const res = await fetch('http://161.132.45.35:8003/usuarios/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: form.toString(),

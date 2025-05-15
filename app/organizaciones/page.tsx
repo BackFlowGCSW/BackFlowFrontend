@@ -38,7 +38,7 @@ export default function OrganizacionesPage() {
   useEffect(() => {
     const fetchOrgs = async () => {
       try {
-        const res = await fetch('http://localhost:8000/organizaciones/');
+        const res = await fetch('http://161.132.45.35:8003/organizaciones/');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data: Organizacion[] = await res.json();
         setOrganizaciones(data);
@@ -65,7 +65,7 @@ const handleCrearOrganizacion = async () => {
   }
 
   try {
-    const response = await fetch("http://localhost:8000/organizaciones/", {
+    const response = await fetch("http://161.132.45.35:8003/organizaciones/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
