@@ -38,7 +38,7 @@ export default function OrganizacionesPage() {
   useEffect(() => {
     const fetchOrgs = async () => {
       try {
-        const res = await fetch('http://localhost:8000/organizaciones/');
+        const res = await fetch('http://161.132.45.35:8003/organizaciones/');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data: Organizacion[] = await res.json();
         setOrganizaciones(data);
@@ -56,12 +56,44 @@ export default function OrganizacionesPage() {
     setNuevaOrganizacion(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleCrearOrganizacion = () => {
-    console.log("Crear org:", nuevaOrganizacion);
-    // Aquí tu lógica de POST /organizaciones/
+const handleCrearOrganizacion = async () => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    alert("Usuario no autenticado");
+    return;
+  }
+
+  try {
+    const response = await fetch("http://161.132.45.35:8003/organizaciones/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}` // ✅ IMPORTANTE
+      },
+      body: JSON.stringify({
+        nombre: nuevaOrganizacion.nombre,
+        descripcion: nuevaOrganizacion.descripcion
+        // ❌ NO incluir creado_por
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error al crear organización: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log("Organización creada:", result);
+    // Puedes recargar la lista aquí si quieres
+  } catch (error) {
+    console.error(error);
+    alert("No se pudo crear la organización.");
+  } finally {
     setIsModalOpen(false);
-    setNuevaOrganizacion({ nombre: '', descripcion: '' });
-  };
+    setNuevaOrganizacion({ nombre: "", descripcion: "" });
+  }
+};
+
 
   return (
     <div className="flex flex-col h-screen">

@@ -84,7 +84,7 @@ export default function ProyectosPage() {
         metodologia: nuevoProyecto.metodologia,
         organizacion_id: currentOrgId  // Usar el id actual
       };
-      const res = await fetch('http://localhost:8000/proyectos/', {
+      const res = await fetch('http://161.132.45.35:8003/proyectos/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ export default function ProyectosPage() {
   const fetchProyectos = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:8000/proyectos/?org=${organizacionId}`, {
+      const res = await fetch(`http://161.132.45.35:8003/proyectos/?org=${organizacionId}`, {
         headers: { 'Content-Type': 'application/json' }
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
