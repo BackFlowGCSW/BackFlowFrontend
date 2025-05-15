@@ -56,12 +56,44 @@ export default function OrganizacionesPage() {
     setNuevaOrganizacion(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleCrearOrganizacion = () => {
-    console.log("Crear org:", nuevaOrganizacion);
-    // Aquí tu lógica de POST /organizaciones/
+const handleCrearOrganizacion = async () => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    alert("Usuario no autenticado");
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:8000/organizaciones/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}` // ✅ IMPORTANTE
+      },
+      body: JSON.stringify({
+        nombre: nuevaOrganizacion.nombre,
+        descripcion: nuevaOrganizacion.descripcion
+        // ❌ NO incluir creado_por
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error al crear organización: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log("Organización creada:", result);
+    // Puedes recargar la lista aquí si quieres
+  } catch (error) {
+    console.error(error);
+    alert("No se pudo crear la organización.");
+  } finally {
     setIsModalOpen(false);
-    setNuevaOrganizacion({ nombre: '', descripcion: '' });
-  };
+    setNuevaOrganizacion({ nombre: "", descripcion: "" });
+  }
+};
+
 
   return (
     <div className="flex flex-col h-screen">

@@ -5,6 +5,8 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { LoginForm } from "./components/LoginForm";
+import { jwtDecode } from 'jwt-decode';
+
 
 export default function LoginPage() {
   const searchParams = useSearchParams();
@@ -13,7 +15,6 @@ export default function LoginPage() {
     searchParams.get('tab') === 'register' ? 'register' : 'login'
   );
 
-  // Estados compartidos para ambos flujos
   const [nombre, setNombre] = useState('');
   const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
@@ -23,11 +24,11 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (activeTab === 'register') {
-      // Flujo de registro
       if (password !== confirmPassword) {
         alert('Las contraseñas no coinciden');
         return;
       }
+
       try {
         const res = await fetch('http://localhost:8000/usuarios/registro', {
           method: 'POST',
@@ -35,23 +36,20 @@ export default function LoginPage() {
           body: JSON.stringify({ nombre, correo, password }),
         });
         const data = await res.json();
-        if (!res.ok) {
-          throw new Error(data.detail || data.mensaje || 'Error desconocido');
-        }
+
+        if (!res.ok) throw new Error(data.detail || data.mensaje || 'Error desconocido');
+
         alert(data.mensaje);
-        // Limpiar campos tras registro
         setNombre('');
         setCorreo('');
         setPassword('');
         setConfirmPassword('');
-        // Opcional: cambiar a tab de login tras registro
         setActiveTab('login');
       } catch (err: any) {
         alert('Error de registro: ' + err.message);
       }
 
     } else {
-      // Flujo de login
       try {
         const form = new URLSearchParams();
         form.append('username', correo);
@@ -64,40 +62,32 @@ export default function LoginPage() {
         });
 
         const data = await res.json();
-        if (!res.ok) {
-          throw new Error(data.detail || 'Credenciales inválidas');
-        }
+        if (!res.ok) throw new Error(data.detail || 'Credenciales inválidas');
 
-        // Guarda el token donde prefieras
+        // Guardar token
         localStorage.setItem('token', data.access_token);
-        alert('¡Login exitoso!');
-        console.log('JWT:', data.access_token);
-        router.push('/organizaciones');
 
-        // Redirige a dashboard u otra ruta
-        // router.push('/dashboard');
+        // Decodificar token y guardar UID
+        const decoded: any = jwtDecode(data.access_token);
+        console.log("Usuario autenticado:", decoded);
+        localStorage.setItem('usuario_uid', decoded.uid || decoded.sub);
+
+        alert('¡Login exitoso!');
+        router.push('/organizaciones');
       } catch (err: any) {
         alert('Error de login: ' + err.message);
       }
     }
   };
 
-  // Estilos de layout (igual que antes)
   const leftCol = { width: '1000px', height: '700px', marginLeft: '5%' };
   const rightCol = { width: '900px', height: '700px', marginRight: '5%', overlap: '100px' };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="relative w-full" style={{ minHeight: '600px' }}>
-
-        {/* Columna izquierda: Form */}
-        <div
-          className="absolute"
-          style={{ ...leftCol, zIndex: 10 }}
-        >
-          <Card className={`border-none shadow-lg h-full flex flex-col ${
-            activeTab === 'login' ? 'bg-[#D9D9D9]' : 'bg-[#A7A3A3]'
-          }`}>
+        <div className="absolute" style={{ ...leftCol, zIndex: 10 }}>
+          <Card className={`border-none shadow-lg h-full flex flex-col ${activeTab === 'login' ? 'bg-[#D9D9D9]' : 'bg-[#A7A3A3]'}`}>
             <CardContent className="flex-grow flex items-center justify-center">
               <div style={{ width: '100%', maxWidth: '640px', paddingRight: '160px' }} className="space-y-4 px-8">
                 <CardHeader>
@@ -123,7 +113,6 @@ export default function LoginPage() {
           </Card>
         </div>
 
-        {/* Columna derecha: Toggle */}
         <div
           className="absolute hidden md:block"
           style={{
@@ -134,9 +123,7 @@ export default function LoginPage() {
             zIndex: 20
           }}
         >
-          <div className={`h-full flex flex-col justify-center items-center p-8 shadow-lg rounded-3xl ${
-            activeTab === 'login' ? 'bg-[#A7A3A3]' : 'bg-[#D9D9D9]'
-          }`}>
+          <div className={`h-full flex flex-col justify-center items-center p-8 shadow-lg rounded-3xl ${activeTab === 'login' ? 'bg-[#A7A3A3]' : 'bg-[#D9D9D9]'}`}>
             {activeTab === 'login' ? (
               <>
                 <h2 className="text-2xl font-bold text-black">Empieza a gestionar tus proyectos</h2>
