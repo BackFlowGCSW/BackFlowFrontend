@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import TimelineCronograma from '@/components/ui/TimelineCronograma';
 
 // Importa los componentes de Shadcn UI
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -208,10 +209,12 @@ export default function DetalleProyectosPage() {
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-2xl font-bold">Solicitudes</CardTitle>
-               <Button size="icon"> + </Button>
-            </CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-2xl font-bold">Solicitudes</CardTitle>
+            <Link href={`/detalles-proyecto/${proyectoId}/nueva-solicitud`}>
+              <Button size="icon">+</Button>
+            </Link>
+          </CardHeader>
             <CardContent className="grid gap-4">
               <Input placeholder="Solicitud Ejemplo" />
               <Input placeholder="XXXXXX" />
@@ -254,8 +257,9 @@ export default function DetalleProyectosPage() {
           </TabsContent>
 
           <TabsContent value="cronograma">
-            {/* Contenido de la pestaña Cronograma (sin cambios) */}
-            <p>Contenido del Cronograma (implementar aquí)</p>
+            <div className="w-full h-[600px]">
+              <TimelineCronograma />
+            </div>
           </TabsContent>
 
           <TabsContent value="miembros">
