@@ -260,7 +260,7 @@ export default function ProyectosPage() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {proyectos.map(p => (
-                  <Link key={p.uid} href={`/detalles-proyecto/${p.uid}`}>
+                  <Link key={p.uid} href={`/detalles-proyecto/${p.uid}?org=${organizacionId}`}>
                     <Card className="cursor-pointer hover:shadow-lg transition-shadow">
                       <CardHeader>
                         <CardTitle>{p.nombre}</CardTitle>

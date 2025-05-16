@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import TimelineCronograma from '@/components/ui/TimelineCronograma';
+
 
 // Importa los componentes de Shadcn UI
 import {
@@ -41,9 +42,12 @@ interface Proyecto {
 }
 
 export default function DetalleProyectosPage() {
-  const params = useParams<{ proyectoId: string; orgId: string }>();
+
+  const params = useParams<{ proyectoId: string }>();
   const proyectoId = params?.proyectoId || '';
-  const organizacionId = params?.orgId || '';
+
+  const searchParams = useSearchParams(); // ✅ Usamos el hook correctamente
+  const organizacionId = searchParams.get('org') ?? ''; // ✅ Ahora sí funciona
 
   // Estados
   const [proyectoInfo, setProyectoInfo] = useState({
@@ -176,12 +180,16 @@ export default function DetalleProyectosPage() {
         </div>
       </div>
 
-      {/* Enlace Regresar */}
+
+      {/* Enlace Regresar con orgId */}
       <div className="p-4 pb-0">
-        <Link href="/proyectos" className="text-blue-500 hover:underline flex items-center">
-          ← Regresar
-        </Link>
-      </div>
+      <Link 
+        href={`/proyectos?org=${organizacionId}`} 
+        className="text-blue-500 hover:underline flex items-center"
+      >
+        ← Regresar
+      </Link>
+    </div>
 
       {/* Modal Agregar Tarea */}
       <Dialog open={isTareaModalOpen} onOpenChange={handleCloseTareaModal}>
